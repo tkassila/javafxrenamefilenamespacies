@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="449.0" prefWidth="925.0" spacing="20.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+
+    <Label fx:id="welcomeText" contentDisplay="TOP" prefHeight="46.0" prefWidth="885.0" style="-fx-font-weight: bold;" text="Rename a file name(s) which contains spaces into underline characters" wrapText="true" VBox.vgrow="ALWAYS">
+      <font>
+         <Font size="18.0" />
+      </font></Label>
+   <CheckBox fx:id="checkBoxAllFiles" mnemonicParsing="false" onAction="#checkBoxAllFilesPressed" style="-fx-font-weight: bold;" text="Rename all file names which constains space in a diretory" />
+    <Button fx:id="buttonOpen" onAction="#onOpenFileButtonClick" style="-fx-font-weight: bold;" text="Open file" />
+   <Label fx:id="welcomeText1" layoutX="30.0" layoutY="199.0" prefHeight="26.0" prefWidth="124.0" style="-fx-font-weight: bold" text="Old file name:" />
+   <Label fx:id="oldFileText" prefHeight="31.0" prefWidth="885.0" />
+   <Label fx:id="welcomeText11" layoutX="30.0" layoutY="141.0" prefHeight="26.0" prefWidth="126.0" style="-fx-font-weight: bold" text="New file name:" />
+   <Label fx:id="newFileText" layoutX="30.0" layoutY="187.0" prefHeight="26.0" prefWidth="885.0" />
+   <Button fx:id="buttonOpenResult" mnemonicParsing="false" onAction="#buttonOpenResultPressed" style="-fx-font-weight: bold;" text="Open result dialog" />
+   <Label fx:id="labelMsg" prefHeight="16.0" prefWidth="915.0" style="-fx-font-weight: bold;" />
+</VBox>
