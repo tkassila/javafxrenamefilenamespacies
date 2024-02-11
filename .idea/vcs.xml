@@ -2,6 +2,6 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/testdir/https:/github.com/tkassila/javafxrenamefilenamespacies.git" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/javafxrenamefilenamespacies" vcs="Git" />
   </component>
 </project>
