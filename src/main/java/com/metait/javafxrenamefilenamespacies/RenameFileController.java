@@ -54,6 +54,7 @@ public class RenameFileController  {
         ColumnConstraints constraints = new ColumnConstraints();
         constraints.setHgrow(Priority.ALWAYS);
 
+        buttonOpenResult.setDisable(true);
         setLabelMsg("Application started.");
 
         listView.setMaxWidth(600);
@@ -125,9 +126,12 @@ public class RenameFileController  {
         if (dirResult.isEmpty()) {
             buttonOpenResult.setDisable(false);
             setLabelMsg("No renamed files.");
+            buttonOpenResult.setDisable(true);
         }
-        else
-           setLabelMsg("All done. See result dialog by pressing the button.");
+        else {
+            setLabelMsg("All done. See result dialog by pressing the button.");
+            buttonOpenResult.setDisable(false);
+        }
     };
 
     @FXML
