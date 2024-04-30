@@ -5,18 +5,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.Priority;
-import javafx.stage.FileChooser;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
+import javafx.stage.*;
 import javafx.scene.control.ListView;
 
 import java.io.File;
 
-public class RenameFileController {
+public class RenameFileController  {
     @FXML
     private Label welcomeText;
     @FXML
@@ -30,7 +28,7 @@ public class RenameFileController {
     @FXML
     private Button buttonOpenResult;
     @FXML
-    private Label labelMsg;
+    public Label labelMsg;
     @FXML
     FileChooser fileChooser = new FileChooser();
     DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -38,7 +36,7 @@ public class RenameFileController {
     ListView<String> listView = new ListView<String>(dirResult);
     ButtonType loginButtonType = new ButtonType("Ok", ButtonType.OK.getButtonData());
     Dialog<String> dialog = new Dialog<>();
-    static Stage primaryStage = null;
+    Stage primaryStage = null;
     static String staticMsg = "";
     static String staticMsg2 = "";
 
@@ -55,6 +53,8 @@ public class RenameFileController {
     {
         ColumnConstraints constraints = new ColumnConstraints();
         constraints.setHgrow(Priority.ALWAYS);
+
+        setLabelMsg("Application started.");
 
         listView.setMaxWidth(600);
         listView.setMinWidth(600);
@@ -77,7 +77,6 @@ public class RenameFileController {
       //  dialog.getDialogPane()
         Platform.runLater(new Runnable() {
             public void run() {
-
                 dialog.getDialogPane().setContent(listView);
                 dialog.show();
             }
@@ -90,13 +89,17 @@ public class RenameFileController {
         newFileText.setText("");
         dirResult.clear();
         buttonOpenResult.setDisable(true);
-        labelMsg.setText("Started...");
+        setLabelMsg("Conversion started...");
 
-        if (dir == null || !dir.exists() || !dir.canRead())
+        if (dir == null || !dir.exists() || !dir.canRead()) {
+            setLabelMsg("Cannot read or not exists chosen directory.");
             return;
+        }
         File [] files = dir.listFiles();
-        if (files == null || files.length == 0)
+        if (files == null || files.length == 0) {
+            setLabelMsg("No files exists in chosen directory.");
             return;
+        }
         File file, newFile;
         String fileName;
         for (int i = 0; i < files.length; i++) {
@@ -119,9 +122,12 @@ public class RenameFileController {
             else
                 dirResult.add("Renamed: " +fileName);
         }
-        if (!dirResult.isEmpty())
+        if (dirResult.isEmpty()) {
             buttonOpenResult.setDisable(false);
-        labelMsg.setText("All done. See result dialog by pressing the button.");
+            setLabelMsg("No renamed files.");
+        }
+        else
+           setLabelMsg("All done. See result dialog by pressing the button.");
     };
 
     @FXML
@@ -137,7 +143,7 @@ public class RenameFileController {
                     public void run() {
                         oldFileText.setText("");
                         newFileText.setText("");
-                        labelMsg.setText("");
+                        setLabelMsg("");
                     }
                 });
                 return;
@@ -162,7 +168,7 @@ public class RenameFileController {
                     public void run() {
                         oldFileText.setText("");
                         newFileText.setText("");
-                        labelMsg.setText("");
+                        setLabelMsg("");
                     }
                 });
                 return;
@@ -205,6 +211,8 @@ public class RenameFileController {
                         alert.setTitle("Warning");
                         alert.setHeaderText("File renaming");
                         alert.setContentText(strError);
+                        alert.initModality(Modality.APPLICATION_MODAL); /* *** */
+                        alert.initOwner(primaryStage);
                         alert.showAndWait();
                     } else {
                         staticMsg2 = new String(newFileName);
@@ -216,10 +224,21 @@ public class RenameFileController {
 
                     }
                 }
+                else
+                {
+                    String strError = "The selected file name does not contains space character!";
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Warning");
+                    alert.setHeaderText("File renaming");
+                    alert.initModality(Modality.APPLICATION_MODAL); /* *** */
+                    alert.initOwner(primaryStage);
+                    alert.setContentText(strError);
+                    alert.showAndWait();
+                }
             }
     }
 
-    static public void setPrimaryStage(Stage stage)
+    public void setPrimaryStage(Stage stage)
     {
         primaryStage = stage;
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -227,6 +246,15 @@ public class RenameFileController {
             public void handle(WindowEvent t) {
                 Platform.exit();
                 System.exit(0);
+            }
+        });
+    }
+    
+    private void setLabelMsg(String msg)
+    {
+        Platform.runLater(new Runnable() {
+            public void run() {
+                labelMsg.setText(msg);
             }
         });
     }

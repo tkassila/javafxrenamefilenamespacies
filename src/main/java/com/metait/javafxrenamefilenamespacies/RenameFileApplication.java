@@ -12,6 +12,7 @@ public class RenameFileApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(RenameFileApplication.class.getResource("renamefile-view.fxml"));
+        controller.setPrimaryStage(stage);
         fxmlLoader.setController(controller);
         Scene scene = new Scene(fxmlLoader.load(), 720, 440);
         stage.setTitle("Rename file with space characters");
