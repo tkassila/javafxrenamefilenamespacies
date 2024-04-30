@@ -138,6 +138,7 @@ public class RenameFileController  {
     protected void onOpenFileButtonClick() {
 
         dirResult.clear();
+        buttonOpenResult.setDisable(true);
         if (checkBoxAllFiles.isSelected())
         {
             directoryChooser.setTitle("Rename all space files after selecting dir");
