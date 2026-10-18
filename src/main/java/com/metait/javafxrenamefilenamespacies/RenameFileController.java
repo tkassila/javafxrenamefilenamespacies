@@ -239,7 +239,7 @@ public class RenameFileController  {
                 if (!newFile.exists()) {
                     dirResult.add("Cannot rename: " + fileName + " because " + newFile.getName() + " does not exists!");
                 } else {
-                    if (!file.delete())
+                    if (!file.exists() && !file.delete())
                         dirResult.add("Cannot delete file: " + fileName + " after renamed new file!");
                 }
             }

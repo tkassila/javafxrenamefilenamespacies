@@ -10,13 +10,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6ea5bfb9-650a-4195-a28b-171a23c79f33" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/javafxrenamefilenamespacies" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/javafxrenamefilenamespacies.jar" beforeDir="false" afterPath="$PROJECT_DIR$/javafxrenamefilenamespacies.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/javafxrenamefilenamespacies/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/javafxrenamefilenamespacies/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/javafxrenamefilenamespacies/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/javafxrenamefilenamespacies/LICENSE" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/javafxrenamefilenamespacies/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/javafxrenamefilenamespacies/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/artifacts/javafxrenamefilenamespacies_jar/javafxrenamefilenamespacies.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/javafxrenamefilenamespacies_jar/javafxrenamefilenamespacies.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run.sh" beforeDir="false" afterPath="$PROJECT_DIR$/run.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/metait/javafxrenamefilenamespacies/RenameFileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/metait/javafxrenamefilenamespacies/RenameFileController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
