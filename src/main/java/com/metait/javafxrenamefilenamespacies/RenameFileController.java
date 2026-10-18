@@ -7,12 +7,15 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.Priority;
 import javafx.stage.*;
 import javafx.scene.control.ListView;
 
 import java.io.File;
+import java.io.IOException;
 
 public class RenameFileController  {
     @FXML
@@ -39,6 +42,7 @@ public class RenameFileController  {
     Stage primaryStage = null;
     static String staticMsg = "";
     static String staticMsg2 = "";
+    private File selectedDir = null;
 
     @FXML
     protected void checkBoxAllFilesPressed()
@@ -62,6 +66,23 @@ public class RenameFileController  {
         listView.setMaxHeight(400);
         listView.setMinHeight(400);
         dialog.setResizable(true);
+
+        // Lisätään tuplaklikkauksen kuuntelija (Listener / EventHandler)
+        listView.setOnMouseClicked((MouseEvent event) -> {
+            // Tarkistetaan onko kyseessä tuplaklikkaus ja hiiren vasen painike
+            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+                String valittu = listView.getSelectionModel().getSelectedItem();
+                if (valittu != null) {
+                    String fileName = getFileNameFromCannotRenameDialogSelection(valittu);
+                    // Kutsutaan pääohjelman metodia suoraan!
+                    openFileInNautilus(fileName);
+                    // Suljetaan dialogi valinnan jälkeen
+                   // dialogi.setResult(null);
+                   // dialogi.close();
+                }
+            }
+        });
+
         dialog.setTitle("Directory changes");
         dialog.getDialogPane().getButtonTypes().add(loginButtonType);
         boolean disabled = false; // computed based on content of text fields, for example
@@ -71,6 +92,98 @@ public class RenameFileController  {
         buttonOpen.setDefaultButton(true);
         buttonOpenResult.setDisable(true);
         dialog.setWidth(500);
+    }
+
+    protected String getFileNameFromCannotRenameDialogSelection(String valittu)
+    {
+        if (valittu == null || valittu.isEmpty() || valittu.trim().length()==0)
+            return null;
+        String tmp = getTwoWordsOf(valittu);
+        if (tmp == null || tmp.isEmpty())
+            return null;
+        if (selectedDir == null)
+            return null;
+        boolean bContainsSpace = tmp.contains(" ");
+        tmp = selectedDir.getAbsolutePath() +File.separatorChar +tmp;
+        /*
+        if (bContainsSpace)
+            tmp = "'" +tmp +"'";
+         */
+        return tmp;
+    }
+
+    private String getTwoWordsOf(String str)
+    {
+        if (str == null || str.isEmpty())
+            return str;
+        StringBuffer sb = new StringBuffer();
+        int i = 0;
+        int len = str.length();
+        char[] arrStr = str.toCharArray();
+        while (arrStr[i] != ' ') {
+            i++;
+        }
+        i++;
+        while (arrStr[i] != ' ') {
+            i++;
+        }
+        i++;
+        for (; i < len; i++)
+        {
+            sb.append(arrStr[i]);
+        }
+        String tmp = sb.toString();
+        int index = tmp.indexOf(".");
+        if (index > -1)
+        {
+            char[] arrStr2 = tmp.toCharArray();
+            int j = index;
+            while (arrStr2[j] != ' ') {
+                j++;
+            }
+            tmp = tmp.substring(0, j);
+            return tmp;
+        }
+        return sb.toString();
+    }
+
+    protected void openFileInNautilus(String selectedFile)
+    {
+        File selected = new File(selectedFile);
+        if (selected.isDirectory())
+            return;
+        if (!selected.exists())
+            return;
+
+        boolean bContainsSpace = selected.getAbsolutePath().contains(" ");
+        String strFile = selected.getAbsolutePath();
+        /*
+        if (bContainsSpace)
+            strFile = "'" +strFile +"'";
+         */
+
+        try {
+            // Välitetään polku argumenttina nautilus-komennolle
+            ProcessBuilder pb = new ProcessBuilder("nautilus", strFile);
+            Process prosessi = pb.start();
+            // waitFor() odottaa prosessin loppumista ja palauttaa exit-arvon
+            int exitValue = prosessi.waitFor();
+
+            System.out.println("Prosessin exit-arvo: " + exitValue);
+            if (exitValue == 0) {
+                String strMsg = "Nautilus avattu polussa: " + selected.getAbsolutePath();
+                System.out.println(strMsg);
+                setLabelMsg(strMsg);
+            }
+        } catch (java.lang.InterruptedException e1) {
+            String strMsg = "Virhe tiedoston nautilus avaamisessa: " + e1.getMessage();
+            System.err.println(strMsg);
+            setLabelMsg(strMsg);
+    } catch (IOException e) {
+            String strMsg = "Virhe tiedoston nautilus avaamisessa: " + e.getMessage();
+            System.err.println(strMsg);
+            setLabelMsg(strMsg);
+        }
     }
 
     @FXML
@@ -90,12 +203,13 @@ public class RenameFileController  {
         newFileText.setText("");
         dirResult.clear();
         buttonOpenResult.setDisable(true);
-        setLabelMsg("Conversion started...");
+        setLabelMsg("File conversion started...");
 
         if (dir == null || !dir.exists() || !dir.canRead()) {
             setLabelMsg("Cannot read or not exists chosen directory.");
             return;
         }
+        selectedDir = dir;
         File [] files = dir.listFiles();
         if (files == null || files.length == 0) {
             setLabelMsg("No files exists in chosen directory.");
@@ -115,13 +229,20 @@ public class RenameFileController  {
             newFile = new File(file.getParent() +File.separator
                     +fileName.replaceAll("\\s", "_"));
             if (newFile.exists()) {
-                dirResult.add("Cannot rename: " +fileName +" because " +newFile.getName() +" exists!");
+                dirResult.add("Cannot rename: " +fileName +" because " +newFile.getName() +" all ready exists!");
                 continue;
             }
             if (!file.renameTo(newFile))
                 dirResult.add("Error! Cannot rename: " +fileName);
-            else
-                dirResult.add("Renamed: " +fileName);
+            else {
+                dirResult.add("Renamed: " + fileName);
+                if (!newFile.exists()) {
+                    dirResult.add("Cannot rename: " + fileName + " because " + newFile.getName() + " does not exists!");
+                } else {
+                    if (!file.delete())
+                        dirResult.add("Cannot delete file: " + fileName + " after renamed new file!");
+                }
+            }
         }
         if (dirResult.isEmpty()) {
             buttonOpenResult.setDisable(false);
